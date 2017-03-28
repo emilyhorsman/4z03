@@ -1,5 +1,6 @@
 import           Control.Applicative
 import           Control.Concurrent
+import           Control.Concurrent.STM
 import           Control.Monad
 import           Data.Time.Clock
 import           Data.Time.Format
@@ -19,6 +20,15 @@ handleInput l =
     threadDelay (truncate 3e6) >> putStrLn l
 
 
+increment :: Num a => TVar a -> STM a
+increment num =
+    readTVar num >>= (\n -> writeTVar num (n + 1) >> return (n + 1))
+
+
 main :: IO ()
 main =
-    forever $ getLine >>= forkIO . handleInput
+    let
+        n = newTVar 0
+    in
+        (atomically $ (n >>= increment)) >>= (putStrLn . show)
+    --forever $ getLine >>= forkIO . handleInput
