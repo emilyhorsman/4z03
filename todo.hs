@@ -26,7 +26,10 @@ handleInput n l = do
 
 increment :: Num a => TVar a -> STM a
 increment num =
-    readTVar num >>= (\n -> writeTVar num (n + 1) >> return (n + 1))
+    let
+        inc = (+1)
+    in
+        readTVar num >>= (\n -> writeTVar num (inc n)) >> readTVar num
 
 
 main :: IO ()
