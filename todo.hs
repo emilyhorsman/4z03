@@ -17,8 +17,11 @@ parseDateHeading input =
 
 
 handleInput :: (Num a, PrintfArg a) => TVar a -> String -> IO ()
-handleInput n l =
-    threadDelay (truncate 1e6) >> putStrLn l >> (atomically $ increment n) >>= (putStrLn . printf "Incremented %d times!")
+handleInput n l = do
+    threadDelay (truncate 1e6)
+    putStrLn l
+    count <- atomically $ increment n
+    putStrLn $ printf "Incremented %d times!" count
 
 
 increment :: Num a => TVar a -> STM a
