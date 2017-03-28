@@ -1,9 +1,11 @@
-import Control.Applicative
-import Data.Time.Format
-import Data.Time.Clock
+import           Control.Applicative
+import           Data.Time.Clock
+import           Data.Time.Format
+
 
 parseDate :: String -> String -> Maybe UTCTime
 parseDate = parseTimeM True defaultTimeLocale
+
 
 parseDateHeading :: String -> Maybe UTCTime
 parseDateHeading input =
