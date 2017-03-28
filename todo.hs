@@ -4,6 +4,7 @@ import           Control.Concurrent.STM
 import           Control.Monad
 import           Data.Time.Clock
 import           Data.Time.Format
+import Text.Printf
 
 
 parseDate :: String -> String -> Maybe UTCTime
@@ -15,9 +16,9 @@ parseDateHeading input =
     parseDate "=== %b %a %d ===" input <|> parseDate "=== %a %d ===" input
 
 
-handleInput :: String -> IO ()
-handleInput l =
-    threadDelay (truncate 3e6) >> putStrLn l
+handleInput :: (Num a, PrintfArg a) => TVar a -> String -> IO ()
+handleInput n l =
+    threadDelay (truncate 1e6) >> putStrLn l >> (atomically $ increment n) >>= (putStrLn . printf "Incremented %d times!")
 
 
 increment :: Num a => TVar a -> STM a
@@ -26,9 +27,6 @@ increment num =
 
 
 main :: IO ()
-main =
-    let
-        n = newTVar 0
-    in
-        (atomically $ (n >>= increment)) >>= (putStrLn . show)
-    --forever $ getLine >>= forkIO . handleInput
+main = do
+    n <- atomically $ newTVar (0 :: Integer)
+    forever $ getLine >>= forkIO . (handleInput n)
