@@ -4,7 +4,7 @@ import           Control.Concurrent.STM
 import           Control.Monad
 import           Data.Time.Clock
 import           Data.Time.Format
-import Text.Printf
+import           Text.Printf
 
 
 parseDate :: String -> String -> Maybe UTCTime
