@@ -26,13 +26,10 @@ handleInput n l = do
 
 increment :: Num a => TVar a -> STM a
 increment num =
-    let
-        inc = (+1)
-    in
-        readTVar num >>= (\n -> writeTVar num (inc n)) >> readTVar num
+    readTVar num >>= writeTVar num . (+1) >> readTVar num
 
 
 main :: IO ()
 main = do
     n <- atomically $ newTVar (0 :: Integer)
-    forever $ getLine >>= forkIO . (handleInput n)
+    forever $ getLine >>= forkIO . handleInput n
